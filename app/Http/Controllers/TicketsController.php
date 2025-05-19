@@ -15,13 +15,13 @@ class TicketsController extends Controller
     public function index(Request $request)
     {
         $ticket = Tickets::all()->where('expired', '>', now());
-        if ($request->header('user-agent')=='android') {
+        if ($request->header('user-agent') == 'android') {
             return response()->json([
-                'message'=>'Data tiket',
-                'data'=>$ticket
-                ], JsonResponse::HTTP_OK);
+                'message' => 'Data tiket',
+                'data' => $ticket
+            ], JsonResponse::HTTP_OK);
         }
-        return view('home', ['tickets_list'=>$ticket]);
+        return view('admin.tickets.index', ['tickets_list' => $ticket]);
     }
 
     /**
@@ -29,7 +29,7 @@ class TicketsController extends Controller
      */
     public function create()
     {
-        return view('');
+        return view('admin.tickets.form');
     }
 
     /**
@@ -38,34 +38,34 @@ class TicketsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'=>['required', 'string', 'max:50'],
-            'expired'=>['required', 'date'],
-            'description'=>['string'],
-            'price'=>['required', 'numeric'],
-            'images'=>['required', 'file', 'max:512', 'mimes:jpg,jpeg,png']
+            'name' => ['required', 'string', 'max:50'],
+            'expired' => ['required', 'date'],
+            'description' => ['string'],
+            'price' => ['required', 'numeric'],
+            'images' => ['required', 'file', 'max:512', 'mimes:jpg,jpeg,png']
         ]);
 
         $ext = $request->file('images')->getClientOriginalExtension();
         $name = $request->name . "-" . $request->expired . "." . $ext;
         $request->file('images')->storeAs(
             "ticket-images",
-            $name, 
-            ['disk'=>'public']
+            $name,
+            ['disk' => 'public']
         );
 
         $ticket = Tickets::create([
-            'name'=>$request->name,
-            'expired'=>$request->expired,
-            'description'=>$request->description,
-            'price'=>$request->price,
-            'images'=>"storage/ticket-images/".$name
+            'name' => $request->name,
+            'expired' => $request->expired,
+            'description' => $request->description,
+            'price' => $request->price,
+            'images' => "storage/ticket-images/" . $name
         ]);
 
-        if($request->header("user-agent") == "android"){
-            return response()->json(['message'=>'Tiket sukses dibuat'], JsonResponse::HTTP_CREATED);
+        if ($request->header("user-agent") == "android") {
+            return response()->json(['message' => 'Tiket sukses dibuat'], JsonResponse::HTTP_CREATED);
         }
 
-        return view('', ['message'=>'Tiket sukses disimpan']);
+        return view('admin.tickets.index', ['message' => 'Tiket sukses disimpan']);
     }
 
     /**
@@ -74,13 +74,13 @@ class TicketsController extends Controller
     public function show(Request $request, string $id)
     {
         $ticket = Tickets::where('id', (int) $id)->first();
-        if($request->header('user-agent') == 'android'){
+        if ($request->header('user-agent') == 'android') {
             return response()->json([
-                'message'=> 'Data tiket',
-                'data'=>$ticket
+                'message' => 'Data tiket',
+                'data' => $ticket
             ], JsonResponse::HTTP_ACCEPTED);
         }
-        return view('', ['ticket'=>$ticket]);
+        return view('admin.tickets.index', ['ticket' => $ticket]);
     }
 
     /**
@@ -89,7 +89,7 @@ class TicketsController extends Controller
     public function edit(string $id)
     {
         $ticket = Tickets::where('id', (int) $id)->first();
-        return view('', ['ticket'=>$ticket]);
+        return view('admin.tickets.form', ['ticket' => $ticket]);
     }
 
     /**
@@ -98,21 +98,21 @@ class TicketsController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'name'=>['string', 'max:50'],
-            'description'=>['string'],
-            'price'=>['numeric']
+            'name' => ['string', 'max:50'],
+            'description' => ['string'],
+            'price' => ['numeric']
         ]);
 
         $ticket = Tickets::where('id', '=', (int) $id)->first();
-        $ticket->name=$request->name;
-        $ticket->description=$request->description;
-        $ticket->price=$request->price;
+        $ticket->name = $request->name;
+        $ticket->description = $request->description;
+        $ticket->price = $request->price;
         $ticket->save();
 
-        if($request->header('user-agent') == 'android'){
-            return response()->json(['message'=>'Update berhasil'], JsonResponse::HTTP_ACCEPTED);
+        if ($request->header('user-agent') == 'android') {
+            return response()->json(['message' => 'Update berhasil'], JsonResponse::HTTP_ACCEPTED);
         }
-        return view('', ['message'=>'Update berhasil']);
+        return view('admin.tickets.index', ['message' => 'Update berhasil']);
     }
 
     /**
@@ -121,9 +121,21 @@ class TicketsController extends Controller
     public function destroy(Request $request, string $id)
     {
         $ticket = Tickets::destroy((int) $id);
-        if($request->header('user-agent') == 'android'){
-            return response()->json(['message'=> 'tiket berhasil dihapus'], JsonResponse::HTTP_ACCEPTED);
+        if ($request->header('user-agent') == 'android') {
+            return response()->json(['message' => 'tiket berhasil dihapus'], JsonResponse::HTTP_ACCEPTED);
         }
-        return view('', ['message'=>'Tiket berhasil di hapus']);
+        return view('admin.tickets.index', ['message' => 'Tiket berhasil di hapus']);
+    }
+
+    public function home()
+    {
+        $tickets = Tickets::where('expired', '>', now())->get();
+        return view('home', ['tickets_list' => $tickets]);
+    }
+
+    public function dashboard()
+    {
+        $tickets = Tickets::where('expired', '>', now())->get();
+        return view('dashboard', ['tickets_list' => $tickets]);
     }
 }
