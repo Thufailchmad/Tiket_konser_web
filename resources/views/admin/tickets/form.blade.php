@@ -55,6 +55,13 @@
                             </div>
 
                             <div class="form-group row">
+                                <label class="col-md-2 col-form-label form-control-label">Lokasi</label>
+                                <div class="col-md-10">
+                                    <input type="text" name="lokasi" class="form-control" value="{{ isset($ticket->lokasi) ? \Carbon\Carbon::parse($ticket->expired)->format('Y-m-d') : old('expired') }}">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
                                 <label class="col-md-2 col-form-label form-control-label">Deskripsi</label>
                                 <div class="col-md-10">
                                     <textarea name="description" class="form-control" rows="3">{{ $ticket->description ?? old('description') }}</textarea>

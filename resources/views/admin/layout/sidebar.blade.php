@@ -26,12 +26,12 @@
             <div class="collapse navbar-collapse" id="sidenav-collapse-main">
                 <!-- Nav items -->
                 <ul class="navbar-nav">
-                    <!-- <li class="nav-item">
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('admin.dashboard') }}">
                             <i class="ni ni-shop text-blue"></i>
                             <span class="nav-link-text">Dashboard</span>
                         </a>
-                    </li> -->
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('tickets.index') }}">
                             <i class="ni ni-archive-2 text-primary"></i>

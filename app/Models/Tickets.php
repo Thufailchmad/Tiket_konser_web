@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Tickets extends Model
 {
     protected $fillable = [
-        'name', 'expired', 'description', 'price', 'images'
+        'name', 'expired','lokasi', 'description', 'price', 'images'
     ];
 
     public function chart() : HasMany {

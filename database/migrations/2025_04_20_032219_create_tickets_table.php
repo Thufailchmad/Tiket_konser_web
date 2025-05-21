@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("name", 50);
             $table->date("expired");
+            $table->string("lokasi", 50);
             $table->text("description")->nullable();
             $table->float("price", 7);
             $table->text("images");

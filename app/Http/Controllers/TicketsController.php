@@ -40,6 +40,7 @@ class TicketsController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:50'],
             'expired' => ['required', 'date'],
+            'lokasi' => ['required', 'string', 'max:50'],
             'description' => ['string'],
             'price' => ['required', 'numeric'],
             'images' => ['required', 'file', 'max:512', 'mimes:jpg,jpeg,png']
@@ -56,6 +57,7 @@ class TicketsController extends Controller
         $ticket = Tickets::create([
             'name' => $request->name,
             'expired' => $request->expired,
+            'lokasi' => $request->lokasi,
             'description' => $request->description,
             'price' => $request->price,
             'images' => "storage/ticket-images/" . $name
@@ -65,7 +67,11 @@ class TicketsController extends Controller
             return response()->json(['message' => 'Tiket sukses dibuat'], JsonResponse::HTTP_CREATED);
         }
 
-        return view('admin.tickets.index', ['message' => 'Tiket sukses disimpan']);
+        $tickets_list = Tickets::where('expired', '>', now())->get();
+        return view('admin.tickets.index', [
+            'message' => 'Tiket sukses disimpan',
+            'tickets_list' => $tickets_list
+        ]);
     }
 
     /**
@@ -80,7 +86,11 @@ class TicketsController extends Controller
                 'data' => $ticket
             ], JsonResponse::HTTP_ACCEPTED);
         }
-        return view('admin.tickets.index', ['ticket' => $ticket]);
+        $tickets_list = Tickets::where('expired', '>', now())->get();
+        return view('admin.tickets.index', [
+            'ticket' => $ticket,
+            'tickets_list' => $tickets_list
+        ]);
     }
 
     /**
@@ -99,6 +109,7 @@ class TicketsController extends Controller
     {
         $request->validate([
             'name' => ['string', 'max:50'],
+            'lokasi' => ['string', 'max:50'],
             'description' => ['string'],
             'price' => ['numeric']
         ]);
@@ -112,7 +123,11 @@ class TicketsController extends Controller
         if ($request->header('user-agent') == 'android') {
             return response()->json(['message' => 'Update berhasil'], JsonResponse::HTTP_ACCEPTED);
         }
-        return view('admin.tickets.index', ['message' => 'Update berhasil']);
+        $tickets_list = Tickets::where('expired', '>', now())->get();
+        return view('admin.tickets.index', [
+            'message' => 'Update berhasil',
+            'tickets_list' => $tickets_list
+        ]);
     }
 
     /**
@@ -124,7 +139,11 @@ class TicketsController extends Controller
         if ($request->header('user-agent') == 'android') {
             return response()->json(['message' => 'tiket berhasil dihapus'], JsonResponse::HTTP_ACCEPTED);
         }
-        return view('admin.tickets.index', ['message' => 'Tiket berhasil di hapus']);
+        $tickets_list = Tickets::where('expired', '>', now())->get();
+        return view('admin.tickets.index', [
+            'message' => 'Tiket berhasil di hapus',
+            'tickets_list' => $tickets_list
+        ]);
     }
 
     public function home()

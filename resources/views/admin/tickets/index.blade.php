@@ -36,6 +36,7 @@
                                     <th>Nama</th>
                                     <th>Harga</th>
                                     <th>Expired</th>
+                                    <th>Lokasi</th>
                                     <th>Deskripsi</th>
                                     <th>Gambar</th>
                                     <th>Action</th>
@@ -47,6 +48,7 @@
                                         <td>{{ $ticket->name }}</td>
                                         <td>Rp {{ number_format($ticket->price, 0, ',', '.') }}</td>
                                         <td>{{ \Carbon\Carbon::parse($ticket->expired)->format('d-m-Y') }}</td>
+                                        <td>{{ $ticket->lokasi }}</td>
                                         <td>{{ $ticket->description }}</td>
                                         <td>
                                             <img src="{{ asset($ticket->images) }}" alt="Gambar Tiket" width="80">
