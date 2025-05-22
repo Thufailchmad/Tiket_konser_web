@@ -15,15 +15,15 @@ class ChartController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $chart = Chart::where("userId", $user->id)->get();
-        if($request->header("user-agent")=="android") {
+        $chart = Chart::where("userId", $user->id)->with('ticket')->get();
+        if ($request->header("user-agent") == "android") {
             return response()->json([
-                'message'=>'data chart',
-                'data'=> $chart
+                'message' => 'data chart',
+                'data' => $chart,
             ], JsonResponse::HTTP_ACCEPTED);
         }
 
-        return view('', ['charts'=> $chart]);
+        return view('', ['charts' => $chart]);
     }
 
     /**
@@ -32,18 +32,18 @@ class ChartController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'ticketId'=> ['required', 'numeric',],
-            'qty'=> ['required', 'numeric', 'max:100' ],
+            'ticketId' => ['required', 'numeric',],
+            'qty' => ['required', 'numeric', 'max:100'],
         ]);
         $chart = Chart::create([
-            'qty'=> $request->qty,
-            'userId'=> $request->user()->id,
-            'ticketId'=>$request->ticketId
+            'qty' => $request->qty,
+            'userId' => $request->user()->id,
+            'ticketId' => $request->ticketId
         ]);
 
-        if($request->header('user-agent')== 'android') {
+        if ($request->header('user-agent') == 'android') {
             return response()->json([
-                'message'=>'Tiket berhasil ditambahkan ke keranjang'
+                'message' => 'Tiket berhasil ditambahkan ke keranjang'
             ], JsonResponse::HTTP_ACCEPTED);
         }
 
@@ -56,17 +56,17 @@ class ChartController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'ticketId'=> ['numeric',],
-            'qty'=> ['numeric', 'max:100' ],
+            'ticketId' => ['numeric',],
+            'qty' => ['numeric', 'max:100'],
         ]);
         $chart = Chart::where($id);
         $chart->update([
-            'qty'=> $request->qty,
-            'ticketId'=>$request->ticketId
+            'qty' => $request->qty,
+            'ticketId' => $request->ticketId
         ]);
-        if($request->header('user-agent')== 'android') {
+        if ($request->header('user-agent') == 'android') {
             return response()->json([
-                'message'=> 'Keranjang berhasil diperbarui'
+                'message' => 'Keranjang berhasil diperbarui'
             ], JsonResponse::HTTP_ACCEPTED);
         }
 
@@ -80,9 +80,9 @@ class ChartController extends Controller
     {
         $chart = Chart::findOrFail((int) $id);
         $chart->delete();
-        if($request->header('user-agent')== 'android') {
+        if ($request->header('user-agent') == 'android') {
             return response()->json([
-                'message'=> 'Keranjang berhasil dihapus'
+                'message' => 'Keranjang berhasil dihapus'
             ], JsonResponse::HTTP_ACCEPTED);
         }
         return view('');

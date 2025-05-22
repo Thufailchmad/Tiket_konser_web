@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booked_tickets;
+use App\Models\Chart;
 use App\Models\History;
 use App\Models\History_Item;
 use App\Models\Tickets;
@@ -62,11 +63,16 @@ class HistoryController extends Controller
                 'historyId' => $history->id
             ]);
             $history_item->save();
+
+            $deleteChart = Chart::where('ticketId', '=', $value['ticketId'])
+                ->where('userId', '=', $request->user()->id);
+            $deleteChart->delete();
         }
 
         if ($request->header('user-agent') == 'android') {
             return response()->json([
-                'message' => 'Transaksi berhasil'
+                'message' => 'Transaksi berhasil',
+                'historyId' => $history->id
             ], JsonResponse::HTTP_CREATED);
         }
 
@@ -95,7 +101,7 @@ class HistoryController extends Controller
     public function uploadImage(Request $request, string $id)
     {
         $request->validate([
-            'file' => ['required', 'file', 'max:512', 'mimes:jpg,jpeg,png'],
+            'file' => ['required', 'file', 'max:2048', 'mimes:jpg,jpeg,png'],
         ]);
 
         $ext = $request->file('file')->getClientOriginalExtension();

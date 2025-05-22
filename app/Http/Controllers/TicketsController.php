@@ -111,13 +111,15 @@ class TicketsController extends Controller
             'name' => ['string', 'max:50'],
             'lokasi' => ['string', 'max:50'],
             'description' => ['string'],
-            'price' => ['numeric']
+            'price' => ['numeric'],
+            'expired' => ['date'],
         ]);
 
         $ticket = Tickets::where('id', '=', (int) $id)->first();
         $ticket->name = $request->name;
         $ticket->description = $request->description;
         $ticket->price = $request->price;
+        $ticket->expired = $request->expired;
         $ticket->save();
 
         if ($request->header('user-agent') == 'android') {
