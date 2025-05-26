@@ -39,7 +39,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('history.admin') }}">
+                        <a class="nav-link" href="{{ route('admin.history') }}">
                             <i class="ni ni-archive-2 text-primary"></i>
                             <span class="nav-link-text">Payment</span>
                         </a>

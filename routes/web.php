@@ -25,8 +25,8 @@ Route::prefix('admin')->group(function () {
         Route::delete('delete/{id}', [TicketsController::class, 'destroy'])->name('destroy');
     });
 
-    Route::get('/history', [HistoryController::class, 'adminIndex'])->name('history.admin');
-    Route::put('/history/verify', [HistoryController::class, 'reqPayment'])->name('history.reqPayment');
+    Route::get('/history', [HistoryController::class, 'adminIndex'])->name('admin.history');
+    Route::put('/history/{id}', [HistoryController::class, 'reqPayment'])->name('history.reqPayment');
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -49,7 +49,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [HistoryController::class, 'index'])->name('history.index');
         Route::get('/{id}', [HistoryController::class, 'show'])->name('history.show');
         Route::post('/', [HistoryController::class, 'store'])->name('history.store');
-        Route::put('/{id}', [HistoryController::class, 'reqPayment'])->name('history.reqPayment');
 
         Route::post('/{id}/upload', [HistoryController::class, 'uploadImage'])->name('history.uploadImage');
     });

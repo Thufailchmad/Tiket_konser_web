@@ -29,7 +29,7 @@ class HistoryController extends Controller
 
     public function adminIndex(Request $request)
     {
-        $history = History::where("status", "!=", 0)->get();
+        $history = History::orderBy("created_at", "desc")->with("user")->get();
         return view("admin.history.index", ["histories" => $history]);
     }
 
@@ -84,7 +84,8 @@ class HistoryController extends Controller
      */
     public function show(string $id)
     {
-        $history = History::where('id', '=', $id)->first();
+        $history = History::where('id', '=', $id)
+            ->with('historyItems.ticket')->first();
 
         if (request()->header('user-agent') == 'android') {
             return response()->json([
@@ -93,24 +94,28 @@ class HistoryController extends Controller
             ], JsonResponse::HTTP_ACCEPTED);
         }
 
-        return view('history.index', [
-            'history' => $history
-        ]);
+        // return view('history.index', [
+        //     'history' => $history
+        // ]);
     }
 
     public function uploadImage(Request $request, string $id)
     {
         $request->validate([
-            'file' => ['required', 'file', 'max:2048', 'mimes:jpg,jpeg,png'],
+            'image' => ['required', 'file', 'max:512', 'mimes:jpg,jpeg,png'],
         ]);
 
-        $ext = $request->file('file')->getClientOriginalExtension();
-        $name = $id . "-" . now() . "." . $ext;
-        $request->file('file')->storeAs(
+        $ext = $request->file('image')->getClientOriginalExtension();
+        $name = $id . '-' . time() . '.' . $ext;
+        $request->file('image')->storeAs(
             "payment-images",
             $name,
             ['disk' => 'public']
         );
+
+        $history = History::where('id', '=', $id)->first();
+        $history->image = "storage/payment-images/" . $name;
+        $history->save();
 
         if ($request->header('user-agent') == 'android') {
             return response()->json([
@@ -149,6 +154,6 @@ class HistoryController extends Controller
             }
         }
 
-        return redirect()->route('history.admin');
+        return redirect()->route('admin.history');
     }
 }
