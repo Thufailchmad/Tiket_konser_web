@@ -55,7 +55,7 @@
                                         <button type="submit"
                                             class="table-action table-action-delete btn btn-link p-0"
                                             data-toggle="tooltip" data-original-title="Accept">
-                                            <i class="fas fa-trash"></i>
+                                            <i class="fas fa-check text-green"></i>
                                         </button>
                                     </form>
                                     <form action="{{ route('history.reqPayment', $history->id) }}" method="POST" class="d-inline">
@@ -65,7 +65,7 @@
                                         <button type="submit"
                                             class="table-action table-action-delete btn btn-link p-0"
                                             data-toggle="tooltip" data-original-title="Decline">
-                                            <i class="fas fa-trash"></i>
+                                            <i class="fas fa-times text-danger"></i>
                                         </button>
                                     </form>
                                     @elseif($history->status == 1)

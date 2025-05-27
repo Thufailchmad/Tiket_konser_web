@@ -17,7 +17,8 @@ class HistoryController extends Controller
      */
     public function index()
     {
-        $history = History::orderBy("created_at", "desc")->get();
+        $history = History::orderBy("created_at", "desc")
+            ->where('userId', '=', request()->user()->id)->get();
         if (request()->header("user-agent") == "android") {
             return response()->json([
                 'message' => 'data history',
