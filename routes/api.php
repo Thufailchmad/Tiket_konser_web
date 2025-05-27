@@ -27,6 +27,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/', [TicketsController::class, 'destroy']);
     });
 
+    Route::get('/booked-ticket', [TicketsController::class, 'bookedTicket']);
+
     Route::group(['prefix' => '/chart'], function () {
         Route::get('/', [ChartController::class, 'index']);
         Route::post('/', [ChartController::class, 'store']);

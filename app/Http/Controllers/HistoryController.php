@@ -147,7 +147,7 @@ class HistoryController extends Controller
 
                 $booked_ticket = Booked_tickets::create([
                     'ticketId' => $item->ticketId,
-                    'userId' => $request->user()->id,
+                    'userId' => $history->userId,
                     'code' => $randomString
                 ]);
                 $booked_ticket->save();

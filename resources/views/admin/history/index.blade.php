@@ -47,6 +47,7 @@
                                     <img src="{{ asset($history->image) }}" alt="Gambar Tiket" width="80">
                                 </td>
                                 <td class="table-actions">
+                                    @if ($history->status == 0)
                                     <form action="{{ route('history.reqPayment', $history->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         <input type="hidden" name="_method" value="PUT">
@@ -60,12 +61,19 @@
                                     <form action="{{ route('history.reqPayment', $history->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         <input type="hidden" name="_method" value="PUT">
+                                        <input type="number" name="status" hidden value="2">
                                         <button type="submit"
                                             class="table-action table-action-delete btn btn-link p-0"
                                             data-toggle="tooltip" data-original-title="Decline">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
+                                    @elseif($history->status == 1)
+                                    Diterima
+                                    @elseif($history->status == 2)
+                                    Ditolak
+                                    @endif
+
                                 </td>
                             </tr>
                             @endforeach

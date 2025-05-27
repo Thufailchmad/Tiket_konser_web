@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booked_tickets;
 use App\Models\Tickets;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -158,5 +159,18 @@ class TicketsController extends Controller
     {
         $tickets = Tickets::where('expired', '>', now())->get();
         return view('dashboard', ['tickets_list' => $tickets]);
+    }
+
+    public function bookedTicket()
+    {
+        $booked_tickets = Booked_tickets::where('userId', '=', request()->user()->id)
+            ->with('ticket')->get();
+
+        if (request()->header('user-agent') == 'android') {
+            return response()->json([
+                'message' => 'booked ticket',
+                'data' => $booked_tickets
+            ], JsonResponse::HTTP_ACCEPTED);
+        }
     }
 }
